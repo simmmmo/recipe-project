@@ -1,13 +1,26 @@
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from 'react-query'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+
 import './index.css'
-import App from './App'
+import { RecipesList, Recipe } from './screens'
 import reportWebVitals from './reportWebVitals'
+
+const queryClient = new QueryClient()
+
+const router = createBrowserRouter([
+  { path: '/', element: <RecipesList /> },
+  { path: '/recipe', element: <Recipe /> }
+])
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <React.StrictMode>
-    <App />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
+    {/* <App /> */}
   </React.StrictMode>
 )
 
