@@ -3,20 +3,28 @@ import { useNavigate } from 'react-router-dom'
 
 export const RecipesList = () => {
   const appKey = process.env.REACT_APP_API_KEY
-  const appId = process.env.REACT_APP_API_ID
+  // const appId = process.env.REACT_APP_API_ID
 
   const navigate = useNavigate()
-
+  const options = {
+    method: 'GET',
+    headers: {
+      'X-RapidAPI-Key': `${appKey}`,
+      'X-RapidAPI-Host': 'tasty.p.rapidapi.com'
+    }
+  }
   // isLoading, error,
   const { data: recipeData } = useQuery('recipeData', () =>
     fetch(
-      `https://api.edamam.com/api/recipes/v2?app_id=${appId}&app_key=${appKey}&type=public&mealType=Dinner&dishType=Main%20course&random=true`
+      'https://tasty.p.rapidapi.com/recipes/list?from=0&size=20&tags=under_30_minutes',
+      options
     ).then((res) => {
       return res.json()
     })
   )
-  // const { hits = [] } = data
-  const data = recipeData?.hits || []
+
+  const data = recipeData?.results || []
+  console.log({ data })
 
   return (
     <div className="App">
@@ -35,8 +43,13 @@ export const RecipesList = () => {
                   })
                 }
               >
-                <img className="mb-5 rounded" src={item.recipe.image}></img>
-                <p className="text-lg text-gray-700 font-semibold">{item.recipe.label}</p>
+                <div className="overflow-hidden mb-5 rounded">
+                  <div className="object-cover w-full max-h-40">
+                    <img src={item.thumbnail_url} />
+                  </div>
+                </div>
+
+                <p className="text-lg text-gray-700 font-semibold">{item.name}</p>
               </button>
             )
           })}
